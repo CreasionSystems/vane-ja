@@ -1,3 +1,8 @@
+> [!NOTE]
+> **日本語版（非公式フォーク）** — CreasionSystems による [Vane](https://github.com/ItzCrazyKns/Vane) の日本語化・日本語検索最適化版です。本家とは無関係です。変更点と使い方は [README.ja.md](./README.ja.md) をご覧ください。
+>
+> **Japanese edition (unofficial fork)** of Vane, maintained by CreasionSystems, with a Japanese UI, Japanese answers and Japanese-aware search. Not affiliated with the upstream project. See [README.ja.md](./README.ja.md) for what changed.
+
 # Vane 🔍
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/ItzCrazyKns/Vane?style=social)](https://github.com/ItzCrazyKns/Vane/stargazers)
