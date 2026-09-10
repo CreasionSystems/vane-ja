@@ -26,6 +26,7 @@ import AssistantSteps from './AssistantSteps';
 import { ResearchBlock } from '@/lib/types';
 import Renderer from './Widgets/Renderer';
 import CodeBlock from './MessageRenderer/CodeBlock';
+import { useTranslation } from '@/lib/i18n';
 
 const ThinkTagProcessor = ({
   children,
@@ -58,6 +59,7 @@ const MessageBox = ({
     researchEnded,
     chatHistory,
   } = useChat();
+  const { t } = useTranslation();
 
   const parsedMessage = section.parsedTextBlocks.join('\n\n');
   const speechMessage = section.speechMessage || '';
@@ -121,7 +123,7 @@ const MessageBox = ({
               <div className="flex flex-row items-center space-x-2">
                 <BookCopy className="text-black dark:text-white" size={20} />
                 <h3 className="text-black dark:text-white font-medium text-xl">
-                  Sources
+                  {t('message.sources')}
                 </h3>
               </div>
               <MessageSources sources={sources} />
@@ -152,7 +154,7 @@ const MessageBox = ({
               <div className="flex items-center gap-2 p-3 rounded-lg bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200">
                 <Disc3 className="w-4 h-4 text-black dark:text-white animate-spin" />
                 <span className="text-sm text-black/70 dark:text-white/70">
-                  Brainstorming...
+                  {t('message.brainstorming')}
                 </span>
               </div>
             )}
@@ -170,7 +172,7 @@ const MessageBox = ({
                   size={20}
                 />
                 <h3 className="text-black dark:text-white font-medium text-xl">
-                  Answer
+                  {t('message.answer')}
                 </h3>
               </div>
             )}
@@ -229,7 +231,7 @@ const MessageBox = ({
                           size={20}
                         />
                         <h3 className="text-black dark:text-white font-medium text-xl">
-                          Related
+                          {t('message.related')}
                         </h3>
                       </div>
                       <div className="space-y-0">

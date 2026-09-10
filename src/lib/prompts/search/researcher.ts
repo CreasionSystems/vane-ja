@@ -1,5 +1,7 @@
 import BaseEmbedding from '@/lib/models/base/embedding';
 import UploadStore from '@/lib/uploads/store';
+import { Locale } from '@/lib/i18n/languages';
+import { getResearchLanguageInstruction } from '../language';
 
 const getSpeedPrompt = (
   actionDesc: string,
@@ -323,6 +325,7 @@ export const getResearcherPrompt = (
   i: number,
   maxIteration: number,
   fileIds: string[],
+  language: Locale,
 ) => {
   let prompt = '';
 
@@ -350,5 +353,5 @@ export const getResearcherPrompt = (
       break;
   }
 
-  return prompt;
+  return prompt + getResearchLanguageInstruction(language);
 };

@@ -15,7 +15,12 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
 import { MinimalProvider } from '../models/types';
-import { getAutoMediaSearch } from '../config/clientRegistry';
+import { getAutoMediaSearch, getLanguage } from '../config/clientRegistry';
+import { translate } from '../i18n/translate';
+
+/* checkConfig runs outside the provider tree, so it translates by locale
+ * rather than through the useTranslation hook. */
+const tr = (key: string) => translate(getLanguage(), key);
 import { applyPatch } from 'rfc6902';
 import { Widget } from '@/components/ChatWindow';
 
@@ -99,7 +104,7 @@ const checkConfig = async (
 
     if (!res.ok) {
       throw new Error(
-        `Provider fetching failed with status code ${res.status}`,
+        `${tr('errors.providerFetchFailed')} (${res.status})`,
       );
     }
 
@@ -107,9 +112,7 @@ const checkConfig = async (
     const providers: MinimalProvider[] = data.providers;
 
     if (providers.length === 0) {
-      throw new Error(
-        'No chat model providers found, please configure them in the settings page.',
-      );
+      throw new Error(tr('errors.noProviders'));
     }
 
     const chatModelProvider =
@@ -117,9 +120,7 @@ const checkConfig = async (
       providers.find((p) => p.chatModels.length > 0);
 
     if (!chatModelProvider) {
-      throw new Error(
-        'No chat models found, pleae configure them in the settings page.',
-      );
+      throw new Error(tr('errors.noChatModels'));
     }
 
     chatModelProviderId = chatModelProvider.id;
@@ -134,9 +135,7 @@ const checkConfig = async (
       providers.find((p) => p.embeddingModels.length > 0);
 
     if (!embeddingModelProvider) {
-      throw new Error(
-        'No embedding models found, pleae configure them in the settings page.',
-      );
+      throw new Error(tr('errors.noEmbeddingModels'));
     }
 
     embeddingModelProviderId = embeddingModelProvider.id;
@@ -539,7 +538,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (isReady && initialMessage && isConfigReady) {
       if (!isConfigReady) {
-        toast.error('Cannot send message before the configuration is ready');
+        toast.error(tr('errors.configNotReady'));
         return;
       }
       sendMessage(initialMessage);
@@ -773,6 +772,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           providerId: embeddingModelProvider.providerId,
         },
         systemInstructions: localStorage.getItem('systemInstructions'),
+        language: getLanguage(),
       }),
     });
 

@@ -11,6 +11,27 @@ import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 import { Loader2 } from 'lucide-react';
 import { Switch } from '@headlessui/react';
+import { useTranslation } from '@/lib/i18n';
+
+/* Field metadata is authored server-side in English; tOr keeps it as the
+ * fallback whenever a locale has no translation for that key. */
+const useFieldLabels = (field: UIConfigField) => {
+  const { t, tOr } = useTranslation();
+
+  return {
+    t,
+    tOr,
+    name: tOr(`settings.field.${field.key}.name`, field.name),
+    description: tOr(
+      `settings.field.${field.key}.description`,
+      field.description,
+    ),
+    placeholder: tOr(
+      `settings.field.${field.key}.placeholder`,
+      'placeholder' in field ? (field.placeholder ?? '') : '',
+    ),
+  };
+};
 
 const emitClientConfigChanged = () => {
   if (typeof window !== 'undefined') {
@@ -31,6 +52,7 @@ const SettingsSelect = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const { setTheme } = useTheme();
+  const { t, tOr, name, description } = useFieldLabels(field);
 
   const handleSave = async (newValue: any) => {
     setLoading(true);
@@ -56,12 +78,12 @@ const SettingsSelect = ({
 
         if (!res.ok) {
           console.error('Failed to save config:', await res.text());
-          throw new Error('Failed to save configuration');
+          throw new Error(t('settings.saveFailed'));
         }
       }
     } catch (error) {
       console.error('Error saving config:', error);
-      toast.error('Failed to save configuration.');
+      toast.error(t('settings.saveFailed'));
     } finally {
       setTimeout(() => setLoading(false), 150);
     }
@@ -72,10 +94,10 @@ const SettingsSelect = ({
       <div className="space-y-3 lg:space-y-5">
         <div>
           <h4 className="text-sm lg:text-sm text-black dark:text-white">
-            {field.name}
+            {name}
           </h4>
           <p className="text-[11px] lg:text-xs text-black/50 dark:text-white/50">
-            {field.description}
+            {description}
           </p>
         </div>
         <Select
@@ -83,7 +105,10 @@ const SettingsSelect = ({
           onChange={(event) => handleSave(event.target.value)}
           options={field.options.map((option) => ({
             value: option.value,
-            label: option.name,
+            label: tOr(
+              `settings.option.${field.key}.${option.value}`,
+              option.name,
+            ),
           }))}
           className="!text-xs lg:!text-sm"
           loading={loading}
@@ -106,6 +131,7 @@ const SettingsInput = ({
   dataAdd: string;
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t, name, description, placeholder } = useFieldLabels(field);
 
   const handleSave = async (newValue: any) => {
     setLoading(true);
@@ -128,12 +154,12 @@ const SettingsInput = ({
 
         if (!res.ok) {
           console.error('Failed to save config:', await res.text());
-          throw new Error('Failed to save configuration');
+          throw new Error(t('settings.saveFailed'));
         }
       }
     } catch (error) {
       console.error('Error saving config:', error);
-      toast.error('Failed to save configuration.');
+      toast.error(t('settings.saveFailed'));
     } finally {
       setTimeout(() => setLoading(false), 150);
     }
@@ -144,10 +170,10 @@ const SettingsInput = ({
       <div className="space-y-3 lg:space-y-5">
         <div>
           <h4 className="text-sm lg:text-sm text-black dark:text-white">
-            {field.name}
+            {name}
           </h4>
           <p className="text-[11px] lg:text-xs text-black/50 dark:text-white/50">
-            {field.description}
+            {description}
           </p>
         </div>
         <div className="relative">
@@ -156,7 +182,7 @@ const SettingsInput = ({
             onChange={(event) => setValue(event.target.value)}
             onBlur={(event) => handleSave(event.target.value)}
             className="w-full rounded-lg border border-light-200 dark:border-dark-200 bg-light-primary dark:bg-dark-primary px-3 py-2 lg:px-4 lg:py-3 pr-10 !text-xs lg:!text-[13px] text-black/80 dark:text-white/80 placeholder:text-black/40 dark:placeholder:text-white/40 focus-visible:outline-none focus-visible:border-light-300 dark:focus-visible:border-dark-300 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-            placeholder={field.placeholder}
+            placeholder={placeholder}
             type="text"
             disabled={loading}
           />
@@ -183,6 +209,7 @@ const SettingsTextarea = ({
   dataAdd: string;
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t, name, description, placeholder } = useFieldLabels(field);
 
   const handleSave = async (newValue: any) => {
     setLoading(true);
@@ -205,12 +232,12 @@ const SettingsTextarea = ({
 
         if (!res.ok) {
           console.error('Failed to save config:', await res.text());
-          throw new Error('Failed to save configuration');
+          throw new Error(t('settings.saveFailed'));
         }
       }
     } catch (error) {
       console.error('Error saving config:', error);
-      toast.error('Failed to save configuration.');
+      toast.error(t('settings.saveFailed'));
     } finally {
       setTimeout(() => setLoading(false), 150);
     }
@@ -221,10 +248,10 @@ const SettingsTextarea = ({
       <div className="space-y-3 lg:space-y-5">
         <div>
           <h4 className="text-sm lg:text-sm text-black dark:text-white">
-            {field.name}
+            {name}
           </h4>
           <p className="text-[11px] lg:text-xs text-black/50 dark:text-white/50">
-            {field.description}
+            {description}
           </p>
         </div>
         <div className="relative">
@@ -233,7 +260,7 @@ const SettingsTextarea = ({
             onChange={(event) => setValue(event.target.value)}
             onBlur={(event) => handleSave(event.target.value)}
             className="w-full rounded-lg border border-light-200 dark:border-dark-200 bg-light-primary dark:bg-dark-primary px-3 py-2 lg:px-4 lg:py-3 pr-10 !text-xs lg:!text-[13px] text-black/80 dark:text-white/80 placeholder:text-black/40 dark:placeholder:text-white/40 focus-visible:outline-none focus-visible:border-light-300 dark:focus-visible:border-dark-300 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-            placeholder={field.placeholder}
+            placeholder={placeholder}
             rows={4}
             disabled={loading}
           />
@@ -260,6 +287,7 @@ const SettingsSwitch = ({
   dataAdd: string;
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t, name, description } = useFieldLabels(field);
 
   const handleSave = async (newValue: boolean) => {
     setLoading(true);
@@ -282,12 +310,12 @@ const SettingsSwitch = ({
 
         if (!res.ok) {
           console.error('Failed to save config:', await res.text());
-          throw new Error('Failed to save configuration');
+          throw new Error(t('settings.saveFailed'));
         }
       }
     } catch (error) {
       console.error('Error saving config:', error);
-      toast.error('Failed to save configuration.');
+      toast.error(t('settings.saveFailed'));
     } finally {
       setTimeout(() => setLoading(false), 150);
     }
@@ -300,10 +328,10 @@ const SettingsSwitch = ({
       <div className="flex flex-row items-center space-x-3 lg:space-x-5 w-full justify-between">
         <div>
           <h4 className="text-sm lg:text-sm text-black dark:text-white">
-            {field.name}
+            {name}
           </h4>
           <p className="text-[11px] lg:text-xs text-black/50 dark:text-white/50">
-            {field.description}
+            {description}
           </p>
         </div>
         <Switch
@@ -332,6 +360,7 @@ const SettingsField = ({
   dataAdd: string;
 }) => {
   const [val, setVal] = useState(value);
+  const { t } = useTranslation();
 
   switch (field.type) {
     case 'select':
@@ -371,7 +400,11 @@ const SettingsField = ({
         />
       );
     default:
-      return <div>Unsupported field type: {field.type}</div>;
+      return (
+        <div>
+          {t('settings.unsupportedField')}: {field.type}
+        </div>
+      );
   }
 };
 

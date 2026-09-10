@@ -49,6 +49,7 @@ const socialSearchAction: ResearchAction<typeof schema> = {
       session: additionalConfig.session,
       searchConfig: {
         engines: ['reddit'],
+        /* Deliberately unfiltered: the indexed forums are English */
       },
     });
 

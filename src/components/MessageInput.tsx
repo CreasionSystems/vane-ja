@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import AttachSmall from './MessageInputActions/AttachSmall';
 import { useChat } from '@/lib/hooks/useChat';
+import { useTranslation } from '@/lib/i18n';
 
 const MessageInput = () => {
   const { loading, sendMessage } = useChat();
+  const { t } = useTranslation();
 
   const [copilotEnabled, setCopilotEnabled] = useState(false);
   const [message, setMessage] = useState('');
@@ -74,7 +76,7 @@ const MessageInput = () => {
           setTextareaRows(Math.ceil(height / props.rowHeight));
         }}
         className="transition bg-transparent dark:placeholder:text-white/50 placeholder:text-sm text-sm dark:text-white resize-none focus:outline-none w-full px-2 max-h-24 lg:max-h-36 xl:max-h-48 flex-grow flex-shrink"
-        placeholder="Ask a follow-up"
+        placeholder={t('input.askFollowUp')}
       />
       {mode === 'single' && (
         <button

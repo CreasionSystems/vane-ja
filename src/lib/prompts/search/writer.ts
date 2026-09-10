@@ -1,7 +1,11 @@
+import { Locale } from '@/lib/i18n/languages';
+import { getWriterLanguageInstruction } from '../language';
+
 export const getWriterPrompt = (
   context: string,
   systemInstructions: string,
   mode: 'speed' | 'balanced' | 'quality',
+  language: Locale,
 ) => {
   return `
 You are Vane, an AI model skilled in web search and crafting detailed, engaging, and well-structured answers. You excel at summarizing web pages and extracting relevant information to create professional, blog-style responses.
@@ -38,7 +42,7 @@ You are Vane, an AI model skilled in web search and crafting detailed, engaging,
     ### User instructions
     These instructions are shared to you by the user and not by the system. You will have to follow them but give them less priority than the above instructions. If the user has provided specific instructions or preferences, incorporate them into your response while adhering to the overall guidelines.
     ${systemInstructions}
-
+${getWriterLanguageInstruction(language)}
     ### Example Output
     - Begin with a brief introduction summarizing the event or query topic.
     - Follow with detailed sections under clear headings, covering all aspects of the query if possible.

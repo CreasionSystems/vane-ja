@@ -1,6 +1,8 @@
 'use client';
 
 import { getMeasurementUnit } from '@/lib/config/clientRegistry';
+import { useTranslation } from '@/lib/i18n';
+import { getLanguageMeta } from '@/lib/i18n/languages';
 import { Wind, Droplets, Gauge } from 'lucide-react';
 import { useMemo, useEffect, useState } from 'react';
 
@@ -226,6 +228,8 @@ const Weather = ({
   daily,
   timezone,
 }: WeatherWidgetProps) => {
+  const { t, tOr, locale } = useTranslation();
+  const intlLocale = getLanguageMeta(locale).intlLocale;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const unit = getMeasurementUnit();
   const isImperial = unit === 'imperial';
@@ -273,7 +277,9 @@ const Weather = ({
 
     return daily.time.slice(1, 7).map((time, idx) => {
       const date = new Date(time);
-      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayName = date.toLocaleDateString(intlLocale, {
+        weekday: 'short',
+      });
       const isDay = true;
       const weatherCode = daily.weather_code[idx + 1];
       const info = getWeatherInfo(weatherCode, isDay, isDarkMode);
@@ -286,13 +292,15 @@ const Weather = ({
         precipitation: daily.precipitation_probability_max[idx + 1] || 0,
       };
     });
-  }, [daily, isDarkMode, isImperial]);
+  }, [daily, isDarkMode, isImperial, intlLocale]);
 
   if (!current || !daily || !daily.time || daily.time.length === 0) {
     return (
       <div className="relative overflow-hidden rounded-lg shadow-md bg-gray-200 dark:bg-gray-800">
         <div className="p-4 text-black dark:text-white">
-          <p className="text-sm">Weather data unavailable for {location}</p>
+          <p className="text-sm">
+            {t('weather.unavailable', { location })}
+          </p>
         </div>
       </div>
     );
@@ -323,7 +331,10 @@ const Weather = ({
                 <span className="text-lg">{tempUnitLabel}</span>
               </div>
               <p className="text-sm font-medium drop-shadow mt-0.5">
-                {weatherInfo.description}
+                {tOr(
+                  `weather.condition.${weatherInfo.description}`,
+                  weatherInfo.description,
+                )}
               </p>
             </div>
           </div>
@@ -338,7 +349,7 @@ const Weather = ({
         <div className="mb-3 pb-3 border-b border-gray-800/20 dark:border-white/20">
           <h3 className="text-base font-semibold drop-shadow-md">{location}</h3>
           <p className="text-xs text-gray-700 dark:text-white/80 drop-shadow mt-0.5">
-            {new Date(current.time).toLocaleString('en-US', {
+            {new Date(current.time).toLocaleString(intlLocale, {
               weekday: 'short',
               hour: 'numeric',
               minute: '2-digit',
@@ -381,7 +392,7 @@ const Weather = ({
             <Wind className="w-4 h-4 text-gray-700 dark:text-white/80 flex-shrink-0" />
             <div>
               <p className="text-[10px] text-gray-600 dark:text-white/70">
-                Wind
+                {t('weather.wind')}
               </p>
               <p className="font-semibold">
                 {formatWind(current.wind_speed_10m)} {windUnitLabel}
@@ -393,7 +404,7 @@ const Weather = ({
             <Droplets className="w-4 h-4 text-gray-700 dark:text-white/80 flex-shrink-0" />
             <div>
               <p className="text-[10px] text-gray-600 dark:text-white/70">
-                Humidity
+                {t('weather.humidity')}
               </p>
               <p className="font-semibold">
                 {Math.round(current.relative_humidity_2m)}%
@@ -405,7 +416,7 @@ const Weather = ({
             <Gauge className="w-4 h-4 text-gray-700 dark:text-white/80 flex-shrink-0" />
             <div>
               <p className="text-[10px] text-gray-600 dark:text-white/70">
-                Feels Like
+                {t('weather.feelsLike')}
               </p>
               <p className="font-semibold">
                 {formatTemp(current.apparent_temperature)}

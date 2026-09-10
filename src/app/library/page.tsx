@@ -1,7 +1,8 @@
 'use client';
 
 import DeleteChat from '@/components/DeleteChat';
-import { formatTimeDifference } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
+import { formatRelativeTime } from '@/lib/i18n/format';
 import { BookOpenText, ClockIcon, FileText, Globe2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -17,6 +18,7 @@ export interface Chat {
 const Page = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t, locale } = useTranslation();
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -49,10 +51,10 @@ const Page = () => {
                 className="text-5xl font-normal p-2 pb-0"
                 style={{ fontFamily: 'PP Editorial, serif' }}
               >
-                Library
+                {t('library.title')}
               </h1>
               <div className="px-2 text-sm text-black/60 dark:text-white/60 text-center lg:text-left">
-                Past chats, sources, and uploads.
+                {t('library.subtitle')}
               </div>
             </div>
           </div>
@@ -61,8 +63,8 @@ const Page = () => {
             <span className="inline-flex items-center gap-1 rounded-full border border-black/20 dark:border-white/20 px-2 py-0.5">
               <BookOpenText size={14} />
               {loading
-                ? 'Loading…'
-                : `${chats.length} ${chats.length === 1 ? 'chat' : 'chats'}`}
+                ? t('common.loading')
+                : t('library.chatCount', { count: chats.length })}
             </span>
           </div>
         </div>
@@ -93,13 +95,13 @@ const Page = () => {
             <BookOpenText className="text-black/70 dark:text-white/70" />
           </div>
           <p className="mt-2 text-black/70 dark:text-white/70 text-sm">
-            No chats found.
+            {t('library.empty')}
           </p>
           <p className="mt-1 text-black/70 dark:text-white/70 text-sm">
             <Link href="/" className="text-sky-400">
-              Start a new chat
+              {t('library.emptyCtaLink')}
             </Link>{' '}
-            to see it listed here.
+            {t('library.emptyCtaSuffix')}
           </p>
         </div>
       ) : (
@@ -148,7 +150,7 @@ const Page = () => {
                   <div className="flex flex-wrap items-center gap-2 text-black/70 dark:text-white/70">
                     <span className="inline-flex items-center gap-1 text-xs">
                       <ClockIcon size={14} />
-                      {formatTimeDifference(new Date(), chat.createdAt)} Ago
+                      {formatRelativeTime(locale, new Date(), chat.createdAt)}
                     </span>
 
                     {sourcesLabel && (
@@ -160,8 +162,7 @@ const Page = () => {
                     {chat.files.length > 0 && (
                       <span className="inline-flex items-center gap-1 text-xs border border-black/20 dark:border-white/20 rounded-full px-2 py-0.5">
                         <FileText size={14} />
-                        {chat.files.length}{' '}
-                        {chat.files.length === 1 ? 'file' : 'files'}
+                        {t('library.fileCount', { count: chat.files.length })}
                       </span>
                     )}
                   </div>

@@ -12,6 +12,7 @@ class APISearchAgent {
       enabledSources: input.config.sources,
       query: input.followUp,
       llm: input.config.llm,
+      language: input.config.language,
     });
 
     const widgetPromise = WidgetExecutor.executeAll({
@@ -72,6 +73,7 @@ class APISearchAgent {
       finalContextWithWidgets,
       input.config.systemInstructions,
       input.config.mode,
+      input.config.language,
     );
 
     const answerStream = input.config.llm.streamText({

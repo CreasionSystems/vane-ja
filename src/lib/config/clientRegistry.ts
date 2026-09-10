@@ -1,10 +1,20 @@
 'use client';
 
+import {
+  DEFAULT_LOCALE,
+  Locale,
+  LOCALE_STORAGE_KEY,
+  normalizeLocale,
+} from '../i18n/languages';
+
 const getClientConfig = (key: string, defaultVal?: any) => {
   return localStorage.getItem(key) ?? defaultVal ?? undefined;
 };
 
 export const getTheme = () => getClientConfig('theme', 'dark');
+
+export const getLanguage = (): Locale =>
+  normalizeLocale(getClientConfig(LOCALE_STORAGE_KEY, DEFAULT_LOCALE));
 
 export const getAutoMediaSearch = () =>
   getClientConfig('autoMediaSearch', 'true') === 'true';

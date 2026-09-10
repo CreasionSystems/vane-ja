@@ -1,6 +1,7 @@
 'use client';
 
 import { Calculator, Equal } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 type CalculationWidgetProps = {
   expression: string;
@@ -8,6 +9,8 @@ type CalculationWidgetProps = {
 };
 
 const Calculation = ({ expression, result }: CalculationWidgetProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="rounded-lg border border-light-200 dark:border-dark-200">
       <div className="p-4 space-y-4">
@@ -15,7 +18,7 @@ const Calculation = ({ expression, result }: CalculationWidgetProps) => {
           <div className="flex items-center gap-2 text-black/60 dark:text-white/70">
             <Calculator className="w-4 h-4" />
             <span className="text-xs uppercase font-semibold tracking-wide">
-              Expression
+              {t('calculation.expression')}
             </span>
           </div>
           <div className="rounded-lg border border-light-200 dark:border-dark-200 bg-light-secondary dark:bg-dark-secondary p-3">
@@ -29,7 +32,7 @@ const Calculation = ({ expression, result }: CalculationWidgetProps) => {
           <div className="flex items-center gap-2 text-black/60 dark:text-white/70">
             <Equal className="w-4 h-4" />
             <span className="text-xs uppercase font-semibold tracking-wide">
-              Result
+              {t('calculation.result')}
             </span>
           </div>
           <div className="rounded-xl border border-light-200 dark:border-dark-200 bg-light-secondary dark:bg-dark-secondary p-5">

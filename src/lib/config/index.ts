@@ -3,6 +3,7 @@ import fs from 'fs';
 import { Config, ConfigModelProvider, UIConfigSections } from './types';
 import { hashObj } from '../utils/hash';
 import { getModelProvidersUIConfigSection } from '../models/providers';
+import { DEFAULT_LOCALE, localeOptions } from '../i18n/languages';
 
 class ConfigManager {
   configPath: string = path.join(
@@ -22,6 +23,17 @@ class ConfigManager {
   };
   uiConfigSections: UIConfigSections = {
     preferences: [
+      {
+        name: 'Language',
+        key: 'language',
+        type: 'select',
+        options: localeOptions,
+        required: false,
+        description:
+          'Language used for the interface, the answers and web search.',
+        default: DEFAULT_LOCALE,
+        scope: 'client',
+      },
       {
         name: 'Theme',
         key: 'theme',

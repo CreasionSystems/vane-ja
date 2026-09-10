@@ -49,6 +49,7 @@ const academicSearchAction: ResearchAction<typeof schema> = {
       session: additionalConfig.session,
       searchConfig: {
         engines: ['arxiv', 'google scholar', 'pubmed'],
+        /* Deliberately unfiltered: papers are published in English */
       },
     });
 

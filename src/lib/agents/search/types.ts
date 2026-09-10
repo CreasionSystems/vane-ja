@@ -3,6 +3,7 @@ import BaseLLM from '../../models/base/llm';
 import BaseEmbedding from '@/lib/models/base/embedding';
 import SessionManager from '@/lib/session';
 import { ChatTurnMessage, Chunk } from '@/lib/types';
+import { Locale } from '@/lib/i18n/languages';
 
 export type SearchSources = 'web' | 'discussions' | 'academic';
 
@@ -13,6 +14,7 @@ export type SearchAgentConfig = {
   embedding: BaseEmbedding<any>;
   mode: 'speed' | 'balanced' | 'quality';
   systemInstructions: string;
+  language: Locale;
 };
 
 export type SearchAgentInput = {
@@ -47,6 +49,7 @@ export type ClassifierInput = {
   enabledSources: SearchSources[];
   query: string;
   chatHistory: ChatTurnMessage[];
+  language: Locale;
 };
 
 export type ClassifierOutput = {
@@ -118,6 +121,7 @@ export interface ResearchAction<
       researchBlockId: string;
       fileIds: string[];
       mode: SearchAgentConfig['mode'];
+      language: Locale;
     },
   ) => Promise<ActionOutput>;
 }

@@ -2,6 +2,7 @@ import z from 'zod';
 import { ResearchAction } from '../../../types';
 import { ResearchBlock } from '@/lib/types';
 import { executeSearch } from './baseSearch';
+import { getLanguageMeta } from '@/lib/i18n/languages';
 
 const actionSchema = z.object({
   type: z.literal('web_search'),
@@ -102,6 +103,9 @@ const webSearchAction: ResearchAction<typeof actionSchema> = {
       queries: input.queries,
       researchBlock: researchBlock,
       session: additionalConfig.session,
+      searchConfig: {
+        language: getLanguageMeta(additionalConfig.language).searxngCode,
+      },
     });
 
     return {

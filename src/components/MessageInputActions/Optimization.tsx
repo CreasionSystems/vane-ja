@@ -9,24 +9,25 @@ import {
 import { Fragment } from 'react';
 import { useChat } from '@/lib/hooks/useChat';
 import { AnimatePresence, motion } from 'motion/react';
+import { useTranslation } from '@/lib/i18n';
 
 const OptimizationModes = [
   {
     key: 'speed',
-    title: 'Speed',
-    description: 'Prioritize speed and get the quickest possible answer.',
+    titleKey: 'optimization.speed.title',
+    descriptionKey: 'optimization.speed.description',
     icon: <Zap size={16} className="text-[#FF9800]" />,
   },
   {
     key: 'balanced',
-    title: 'Balanced',
-    description: 'Find the right balance between speed and accuracy',
+    titleKey: 'optimization.balanced.title',
+    descriptionKey: 'optimization.balanced.description',
     icon: <Sliders size={16} className="text-[#4CAF50]" />,
   },
   {
     key: 'quality',
-    title: 'Quality',
-    description: 'Get the most thorough and accurate answer',
+    titleKey: 'optimization.quality.title',
+    descriptionKey: 'optimization.quality.description',
     icon: (
       <Star
         size={16}
@@ -38,6 +39,7 @@ const OptimizationModes = [
 
 const Optimization = () => {
   const { optimizationMode, setOptimizationMode } = useChat();
+  const { t } = useTranslation();
 
   return (
     <Popover className="relative w-full max-w-[15rem] md:max-w-md lg:max-w-lg">
@@ -88,16 +90,18 @@ const Optimization = () => {
                       <div className="flex flex-row justify-between w-full text-black dark:text-white">
                         <div className="flex flex-row space-x-1">
                           {mode.icon}
-                          <p className="text-xs font-medium">{mode.title}</p>
+                          <p className="text-xs font-medium">
+                            {t(mode.titleKey)}
+                          </p>
                         </div>
                         {mode.key === 'quality' && (
                           <span className="bg-sky-500/70 dark:bg-sky-500/40 border border-sky-600 px-1 rounded-full text-[10px] text-white">
-                            Beta
+                            {t('common.beta')}
                           </span>
                         )}
                       </div>
                       <p className="text-black/70 dark:text-white/70 text-xs">
-                        {mode.description}
+                        {t(mode.descriptionKey)}
                       </p>
                     </PopoverButton>
                   ))}

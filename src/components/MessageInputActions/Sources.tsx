@@ -11,20 +11,21 @@ import {
   NetworkIcon,
 } from '@phosphor-icons/react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useTranslation } from '@/lib/i18n';
 
 const sourcesList = [
   {
-    name: 'Web',
+    nameKey: 'sources.web',
     key: 'web',
     icon: <GlobeIcon className="h-[16px] w-auto" />,
   },
   {
-    name: 'Academic',
+    nameKey: 'sources.academic',
     key: 'academic',
     icon: <GraduationCapIcon className="h-[16px] w-auto" />,
   },
   {
-    name: 'Social',
+    nameKey: 'sources.social',
     key: 'discussions',
     icon: <NetworkIcon className="h-[16px] w-auto" />,
   },
@@ -32,6 +33,7 @@ const sourcesList = [
 
 const Sources = () => {
   const { sources, setSources } = useChat();
+  const { t } = useTranslation();
 
   return (
     <Popover className="relative">
@@ -67,7 +69,7 @@ const Sources = () => {
                     >
                       <div className="flex flex-row space-x-1.5 text-black/80 dark:text-white/80">
                         {source.icon}
-                        <p className="text-xs">{source.name}</p>
+                        <p className="text-xs">{t(source.nameKey)}</p>
                       </div>
                       <Switch
                         checked={sources.includes(source.key)}

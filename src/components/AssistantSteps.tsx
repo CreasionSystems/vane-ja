@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { ResearchBlock, ResearchBlockSubStep } from '@/lib/types';
 import { useChat } from '@/lib/hooks/useChat';
+import { useTranslation } from '@/lib/i18n';
 
 const getStepIcon = (step: ResearchBlockSubStep) => {
   if (step.type === 'reasoning') {
@@ -33,23 +34,26 @@ const getStepIcon = (step: ResearchBlockSubStep) => {
 const getStepTitle = (
   step: ResearchBlockSubStep,
   isStreaming: boolean,
+  t: (key: string, vars?: Record<string, string | number>) => string,
 ): string => {
   if (step.type === 'reasoning') {
-    return isStreaming && !step.reasoning ? 'Thinking...' : 'Thinking';
+    return isStreaming && !step.reasoning
+      ? t('steps.thinkingStreaming')
+      : t('steps.thinking');
   } else if (step.type === 'searching') {
     const queries = Array.isArray(step.searching) ? step.searching : [];
-    return `Searching ${queries.length} ${queries.length === 1 ? 'query' : 'queries'}`;
+    return t('steps.searching', { count: queries.length });
   } else if (step.type === 'search_results') {
-    return `Found ${step.reading.length} ${step.reading.length === 1 ? 'result' : 'results'}`;
+    return t('steps.found', { count: step.reading.length });
   } else if (step.type === 'reading') {
-    return `Reading ${step.reading.length} ${step.reading.length === 1 ? 'source' : 'sources'}`;
+    return t('steps.reading', { count: step.reading.length });
   } else if (step.type === 'upload_searching') {
-    return 'Scanning your uploaded documents';
+    return t('steps.scanningUploads');
   } else if (step.type === 'upload_search_results') {
-    return `Reading ${step.results.length} ${step.results.length === 1 ? 'document' : 'documents'}`;
+    return t('steps.readingDocuments', { count: step.results.length });
   }
 
-  return 'Processing';
+  return t('steps.processing');
 };
 
 const AssistantSteps = ({
@@ -65,6 +69,7 @@ const AssistantSteps = ({
     isLast && status === 'answering' ? true : false,
   );
   const { researchEnded, loading } = useChat();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (researchEnded && isLast) {
@@ -85,8 +90,7 @@ const AssistantSteps = ({
         <div className="flex items-center gap-2">
           <Brain className="w-4 h-4 text-black dark:text-white" />
           <span className="text-sm font-medium text-black dark:text-white">
-            Research Progress ({block.data.subSteps.length}{' '}
-            {block.data.subSteps.length === 1 ? 'step' : 'steps'})
+            {t('steps.progress', { count: block.data.subSteps.length })}
           </span>
         </div>
         {isExpanded ? (
@@ -131,7 +135,7 @@ const AssistantSteps = ({
 
                     <div className="flex-1 pb-1">
                       <span className="text-sm font-medium text-black dark:text-white">
-                        {getStepTitle(step, isStreaming)}
+                        {getStepTitle(step, isStreaming, t)}
                       </span>
 
                       {step.type === 'reasoning' && (
@@ -181,7 +185,8 @@ const AssistantSteps = ({
                           <div className="flex flex-wrap gap-1.5 mt-1.5">
                             {step.reading.slice(0, 4).map((result, idx) => {
                               const url = result.metadata.url || '';
-                              const title = result.metadata.title || 'Untitled';
+                              const title =
+                                result.metadata.title || t('steps.untitled');
                               const domain = url ? new URL(url).hostname : '';
                               const faviconUrl = domain
                                 ? `https://s2.googleusercontent.com/s2/favicons?domain=${domain}&sz=128`
@@ -233,7 +238,7 @@ const AssistantSteps = ({
                                 (result.metadata &&
                                   (result.metadata.title ||
                                     result.metadata.fileName)) ||
-                                'Untitled document';
+                                t('steps.untitledDocument');
 
                               return (
                                 <div

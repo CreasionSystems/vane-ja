@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 interface Article {
   title: string;
@@ -8,12 +9,13 @@ interface Article {
 }
 
 const NewsArticleWidget = () => {
+  const { t, locale } = useTranslation();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch('/api/discover?mode=preview')
+    fetch(`/api/discover?mode=preview&language=${locale}`)
       .then((res) => res.json())
       .then((data) => {
         const articles = (data.blogs || []).filter((a: Article) => a.thumbnail);
@@ -37,7 +39,9 @@ const NewsArticleWidget = () => {
           </div>
         </div>
       ) : error ? (
-        <div className="w-full text-xs text-red-400">Could not load news.</div>
+        <div className="w-full text-xs text-red-400">
+          {t('news.loadFailed')}
+        </div>
       ) : article ? (
         <a
           href={`/?q=Summary: ${article.url}`}

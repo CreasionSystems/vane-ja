@@ -1,3 +1,5 @@
+import { getLanguage } from './config/clientRegistry';
+
 export const getSuggestions = async (chatHistory: [string, string][]) => {
   const chatModel = localStorage.getItem('chatModelKey');
   const chatModelProvider = localStorage.getItem('chatModelProviderId');
@@ -13,6 +15,7 @@ export const getSuggestions = async (chatHistory: [string, string][]) => {
         providerId: chatModelProvider,
         key: chatModel,
       },
+      language: getLanguage(),
     }),
   });
 

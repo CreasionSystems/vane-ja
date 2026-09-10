@@ -8,6 +8,7 @@ import {
   UIConfigField,
 } from '@/lib/config/types';
 import { toast } from 'sonner';
+import { useTranslation } from '@/lib/i18n';
 
 const UpdateProvider = ({
   modelProvider,
@@ -18,6 +19,7 @@ const UpdateProvider = ({
   modelProvider: ConfigModelProvider;
   setProviders: React.Dispatch<React.SetStateAction<ConfigModelProvider[]>>;
 }) => {
+  const { t, tOr } = useTranslation();
   const [open, setOpen] = useState(false);
   const [config, setConfig] = useState<Record<string, any>>({});
   const [name, setName] = useState(modelProvider.name);
@@ -67,10 +69,10 @@ const UpdateProvider = ({
         });
       });
 
-      toast.success('Connection updated successfully.');
+      toast.success(t('models.connectionUpdated'));
     } catch (error) {
       console.error('Error updating provider:', error);
-      toast.error('Failed to update connection.');
+      toast.error(t('models.updateConnectionFailed'));
     } finally {
       setLoading(false);
       setOpen(false);
@@ -110,7 +112,7 @@ const UpdateProvider = ({
                 <form onSubmit={handleSubmit} className="flex flex-col flex-1">
                   <div className="px-6 pt-6 pb-4">
                     <h3 className="text-black/90 dark:text-white/90 font-medium text-sm">
-                      Update connection
+                      {t('models.updateConnection')}
                     </h3>
                   </div>
                   <div className="border-t border-light-200 dark:border-dark-200" />
@@ -121,13 +123,13 @@ const UpdateProvider = ({
                         className="flex flex-col items-start space-y-2"
                       >
                         <label className="text-xs text-black/70 dark:text-white/70">
-                          Connection Name*
+                          {t('models.connectionNameLabel')}
                         </label>
                         <input
                           value={name}
                           onChange={(event) => setName(event.target.value)}
                           className="w-full rounded-lg border border-light-200 dark:border-dark-200 bg-light-primary dark:bg-dark-primary px-4 py-3 pr-10 text-sm text-black/80 dark:text-white/80 placeholder:text-black/40 dark:placeholder:text-white/40 focus-visible:outline-none focus-visible:border-light-300 dark:focus-visible:border-dark-300 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                          placeholder={'Connection Name'}
+                          placeholder={t('models.connectionNamePlain')}
                           type="text"
                           required={true}
                         />
@@ -139,7 +141,10 @@ const UpdateProvider = ({
                           className="flex flex-col items-start space-y-2"
                         >
                           <label className="text-xs text-black/70 dark:text-white/70">
-                            {field.name}
+                            {tOr(
+                              `settings.field.${field.key}.name`,
+                              field.name,
+                            )}
                             {field.required && '*'}
                           </label>
                           <input
@@ -171,7 +176,7 @@ const UpdateProvider = ({
                       {loading ? (
                         <Loader2 className="animate-spin" size={16} />
                       ) : (
-                        'Update Connection'
+                        t('models.updateConnectionAction')
                       )}
                     </button>
                   </div>

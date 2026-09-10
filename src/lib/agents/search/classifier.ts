@@ -2,6 +2,7 @@ import z from 'zod';
 import { ClassifierInput } from './types';
 import { classifierPrompt } from '@/lib/prompts/search/classifier';
 import formatChatHistoryAsString from '@/lib/utils/formatHistory';
+import { getClassifierLanguageInstruction } from '@/lib/prompts/language';
 
 const schema = z.object({
   classification: z.object({
@@ -39,7 +40,8 @@ export const classify = async (input: ClassifierInput) => {
     messages: [
       {
         role: 'system',
-        content: classifierPrompt,
+        content:
+          classifierPrompt + getClassifierLanguageInstruction(input.language),
       },
       {
         role: 'user',

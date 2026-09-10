@@ -18,36 +18,37 @@ import Models from './Sections/Models/Section';
 import SearchSection from './Sections/Search';
 import Select from '@/components/ui/Select';
 import Personalization from './Sections/Personalization';
+import { useTranslation } from '@/lib/i18n';
 
 const sections = [
   {
     key: 'preferences',
-    name: 'Preferences',
-    description: 'Customize your application preferences.',
+    nameKey: 'settings.section.preferences.name',
+    descriptionKey: 'settings.section.preferences.description',
     icon: Sliders,
     component: Preferences,
     dataAdd: 'preferences',
   },
   {
     key: 'personalization',
-    name: 'Personalization',
-    description: 'Customize the behavior and tone of the model.',
+    nameKey: 'settings.section.personalization.name',
+    descriptionKey: 'settings.section.personalization.description',
     icon: ToggleRight,
     component: Personalization,
     dataAdd: 'personalization',
   },
   {
     key: 'models',
-    name: 'Models',
-    description: 'Connect to AI services and manage connections.',
+    nameKey: 'settings.section.models.name',
+    descriptionKey: 'settings.section.models.description',
     icon: BrainCog,
     component: Models,
     dataAdd: 'modelProviders',
   },
   {
     key: 'search',
-    name: 'Search',
-    description: 'Manage search settings.',
+    nameKey: 'settings.section.search.name',
+    descriptionKey: 'settings.section.search.description',
     icon: Search,
     component: SearchSection,
     dataAdd: 'search',
@@ -65,6 +66,7 @@ const SettingsDialogue = ({
   const [config, setConfig] = useState<any>(null);
   const [activeSection, setActiveSection] = useState<string>(sections[0].key);
   const [selectedSection, setSelectedSection] = useState(sections[0]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setSelectedSection(sections.find((s) => s.key === activeSection)!);
@@ -86,7 +88,7 @@ const SettingsDialogue = ({
           setConfig(data);
         } catch (error) {
           console.error('Error fetching config:', error);
-          toast.error('Failed to load configuration.');
+          toast.error(t('settings.loadFailed'));
         } finally {
           setIsLoading(false);
         }
@@ -127,7 +129,7 @@ const SettingsDialogue = ({
                       className="text-black/50 dark:text-white/50 group-hover:text-black/70 group-hover:dark:text-white/70"
                     />
                     <p className="text-black/50 dark:text-white/50 group-hover:text-black/70 group-hover:dark:text-white/70 text-[14px]">
-                      Back
+                      {t('settings.back')}
                     </p>
                   </button>
 
@@ -144,14 +146,15 @@ const SettingsDialogue = ({
                         onClick={() => setActiveSection(section.key)}
                       >
                         <section.icon size={17} />
-                        <p>{section.name}</p>
+                        <p>{t(section.nameKey)}</p>
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="flex flex-col space-y-1 py-[18px] px-2">
                   <p className="text-xs text-black/70 dark:text-white/70">
-                    Version: {process.env.NEXT_PUBLIC_VERSION}
+                    {t('settings.version')}:{' '}
+                    {process.env.NEXT_PUBLIC_VERSION}
                   </p>
                   <a
                     href="https://github.com/itzcrazykns/vane"
@@ -180,7 +183,7 @@ const SettingsDialogue = ({
                       return {
                         value: section.key,
                         key: section.key,
-                        label: section.name,
+                        label: t(section.nameKey),
                       };
                     })}
                     value={activeSection}
@@ -195,10 +198,10 @@ const SettingsDialogue = ({
                     <div className="border-b border-light-200/60 px-6 pb-6 lg:pt-6 dark:border-dark-200/60 flex-shrink-0">
                       <div className="flex flex-col">
                         <h4 className="font-medium text-black dark:text-white text-sm lg:text-sm">
-                          {selectedSection.name}
+                          {t(selectedSection.nameKey)}
                         </h4>
                         <p className="text-[11px] lg:text-xs text-black/50 dark:text-white/50">
-                          {selectedSection.description}
+                          {t(selectedSection.descriptionKey)}
                         </p>
                       </div>
                     </div>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ConfigModelProvider } from '@/lib/config/types';
 import { toast } from 'sonner';
+import { useTranslation } from '@/lib/i18n';
 
 const AddModel = ({
   providerId,
@@ -14,6 +15,7 @@ const AddModel = ({
   setProviders: React.Dispatch<React.SetStateAction<ConfigModelProvider[]>>;
   type: 'chat' | 'embedding';
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [modelName, setModelName] = useState('');
   const [modelKey, setModelKey] = useState('');
@@ -59,13 +61,13 @@ const AddModel = ({
         }),
       );
 
-      toast.success('Model added successfully.');
+      toast.success(t('models.modelAdded'));
       setModelName('');
       setModelKey('');
       setOpen(false);
     } catch (error) {
       console.error('Error adding model:', error);
-      toast.error('Failed to add model.');
+      toast.error(t('models.addModelFailed'));
     } finally {
       setLoading(false);
     }
@@ -78,7 +80,7 @@ const AddModel = ({
         className="text-xs text-black/70 dark:text-white/70 hover:text-black hover:dark:text-white flex flex-row items-center space-x-1 active:scale-95 transition duration-200"
       >
         <Plus size={12} />
-        <span>Add</span>
+        <span>{t('common.add')}</span>
       </button>
       <AnimatePresence>
         {open && (
@@ -110,26 +112,26 @@ const AddModel = ({
                     <div className="flex flex-col space-y-4 flex-1">
                       <div className="flex flex-col items-start space-y-2">
                         <label className="text-xs text-black/70 dark:text-white/70">
-                          Model name*
+                          {t('models.modelNameLabel')}
                         </label>
                         <input
                           value={modelName}
                           onChange={(e) => setModelName(e.target.value)}
                           className="w-full rounded-lg border border-light-200 dark:border-dark-200 bg-light-primary dark:bg-dark-primary px-4 py-3 text-[13px] text-black/80 dark:text-white/80 placeholder:text-black/40 dark:placeholder:text-white/40 focus-visible:outline-none focus-visible:border-light-300 dark:focus-visible:border-dark-300 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                          placeholder="e.g., GPT-4"
+                          placeholder={t('models.modelNamePlaceholder')}
                           type="text"
                           required
                         />
                       </div>
                       <div className="flex flex-col items-start space-y-2">
                         <label className="text-xs text-black/70 dark:text-white/70">
-                          Model key*
+                          {t('models.modelKeyLabel')}
                         </label>
                         <input
                           value={modelKey}
                           onChange={(e) => setModelKey(e.target.value)}
                           className="w-full rounded-lg border border-light-200 dark:border-dark-200 bg-light-primary dark:bg-dark-primary px-4 py-3 text-[13px] text-black/80 dark:text-white/80 placeholder:text-black/40 dark:placeholder:text-white/40 focus-visible:outline-none focus-visible:border-light-300 dark:focus-visible:border-dark-300 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                          placeholder="e.g., gpt-4"
+                          placeholder={t('models.modelKeyPlaceholder')}
                           type="text"
                           required
                         />
@@ -145,7 +147,7 @@ const AddModel = ({
                         {loading ? (
                           <Loader2 className="animate-spin" size={16} />
                         ) : (
-                          'Add Model'
+                          t('models.addModel')
                         )}
                       </button>
                     </div>

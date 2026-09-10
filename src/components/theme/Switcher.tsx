@@ -2,10 +2,12 @@
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useState } from 'react';
 import Select from '../ui/Select';
+import { useTranslation } from '@/lib/i18n';
 
 type Theme = 'dark' | 'light' | 'system';
 
 const ThemeSwitcher = ({ className }: { className?: string }) => {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
@@ -50,8 +52,8 @@ const ThemeSwitcher = ({ className }: { className?: string }) => {
       value={theme}
       onChange={(e) => handleThemeSwitch(e.target.value as Theme)}
       options={[
-        { value: 'light', label: 'Light' },
-        { value: 'dark', label: 'Dark' },
+        { value: 'light', label: t('theme.light') },
+        { value: 'dark', label: t('theme.dark') },
       ]}
     />
   );

@@ -57,6 +57,7 @@ class SearchAgent {
       enabledSources: input.config.sources,
       query: input.followUp,
       llm: input.config.llm,
+      language: input.config.language,
     });
 
     const widgetPromise = WidgetExecutor.executeAll({
@@ -123,6 +124,7 @@ class SearchAgent {
       finalContextWithWidgets,
       input.config.systemInstructions,
       input.config.mode,
+      input.config.language,
     );
 
     const answerStream = input.config.llm.streamText({

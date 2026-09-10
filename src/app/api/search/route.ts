@@ -4,6 +4,7 @@ import SessionManager from '@/lib/session';
 import { ChatTurnMessage } from '@/lib/types';
 import { SearchSources } from '@/lib/agents/search/types';
 import APISearchAgent from '@/lib/agents/search/api';
+import { normalizeLocale } from '@/lib/i18n/languages';
 
 interface ChatRequestBody {
   optimizationMode: 'speed' | 'balanced' | 'quality';
@@ -14,6 +15,7 @@ interface ChatRequestBody {
   history: Array<[string, string]>;
   stream?: boolean;
   systemInstructions?: string;
+  language?: string;
 }
 
 export const POST = async (req: Request) => {
@@ -60,6 +62,7 @@ export const POST = async (req: Request) => {
         mode: body.optimizationMode,
         fileIds: [],
         systemInstructions: body.systemInstructions || '',
+        language: normalizeLocale(body.language),
       },
       followUp: body.query,
       chatId: crypto.randomUUID(),

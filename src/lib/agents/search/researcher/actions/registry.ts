@@ -7,6 +7,7 @@ import {
   SearchAgentConfig,
   SearchSources,
 } from '../../types';
+import { Locale } from '@/lib/i18n/languages';
 
 class ActionRegistry {
   private static actions: Map<string, ResearchAction> = new Map();
@@ -68,6 +69,7 @@ class ActionRegistry {
       researchBlockId: string;
       fileIds: string[];
       mode: SearchAgentConfig['mode'];
+      language: Locale;
     },
   ) {
     const action = this.actions.get(name);
@@ -85,6 +87,7 @@ class ActionRegistry {
       researchBlockId: string;
       fileIds: string[];
       mode: SearchAgentConfig['mode'];
+      language: Locale;
     },
   ): Promise<ActionOutput[]> {
     const results: ActionOutput[] = [];
