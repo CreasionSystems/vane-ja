@@ -1,6 +1,8 @@
 services:
   vane:
-    image: itzcrazykns1337/vane:latest
+    # Locally built image: this tree carries the Japanese i18n changes,
+    # so it must not be confused with the upstream Docker Hub tag.
+    image: vane:ja
     build:
       context: .
     ports:
