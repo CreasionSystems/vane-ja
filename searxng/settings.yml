@@ -10,7 +10,9 @@ search:
     - json
 
 server:
-  secret_key: 'a2fb23f1b02e6ee83875b09826990de0f6bd908b6638e8c10277d415f6ab852b' # Is overwritten by ${SEARXNG_SECRET}
+  # Replaced at container start by entrypoint.sh with SEARXNG_SECRET, or with
+  # a random value when that is unset. Do not commit a real key here.
+  secret_key: 'set-at-container-start'
 
 engines:
   - name: wolframalpha
