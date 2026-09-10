@@ -10,6 +10,9 @@ on:
 
 jobs:
   build-amd64:
+    # Publishes to the upstream project's registry; skip in forks, where it
+    # would push images under the fork's name or fail for lack of secrets.
+    if: github.repository == 'ItzCrazyKns/Vane'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -78,6 +81,9 @@ jobs:
             --push .
 
   build-arm64:
+    # Publishes to the upstream project's registry; skip in forks, where it
+    # would push images under the fork's name or fail for lack of secrets.
+    if: github.repository == 'ItzCrazyKns/Vane'
     runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
