@@ -34,8 +34,13 @@ COPY drizzle ./drizzle
 
 RUN mkdir /home/vane/uploads
 
-RUN yarn add playwright
-RUN yarn playwright install --with-deps --only-shell chromium
+# Next's standalone output only bundles what it can trace statically, which
+# drops optional native bindings (@napi-rs/canvas) and the playwright CLI. Copy
+# the builder's full, lockfile-pinned node_modules over it rather than running
+# `yarn add`, which re-resolves the tree against the registry and silently
+# upgrades next past the version the .next artifacts were compiled with.
+COPY --from=builder /home/vane/node_modules ./node_modules
+RUN node node_modules/playwright/cli.js install --with-deps --only-shell chromium
 
 RUN useradd --shell /bin/bash --system \
     --home-dir "/usr/local/searxng" \
